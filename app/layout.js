@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { WebSocketProvider } from "./components/websocket_components/ws_manager"; // Adjust the path based on your folder structure
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +23,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <WebSocketProvider>{children}</WebSocketProvider>
       </body>
     </html>
   );
