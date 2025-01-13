@@ -59,7 +59,6 @@ export default function MarketOverview(props) {
         <>
             <Navbar />
             <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                <h1>Market Overview</h1>
                 <UnderlyingDynamicChart {...props} />
             </div>
         </>

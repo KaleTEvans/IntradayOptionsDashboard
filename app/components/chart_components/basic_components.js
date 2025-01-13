@@ -26,20 +26,8 @@ export const darkModeChartOptions = {
     priceScale: {
         borderColor: '#71649C'
     },
-};
 
-export const volumeChartOptions = {
-    priceFormat: {
-        type: 'volume'
-    },
-    priceScaleId: '',
-    priceScale: {
-        scaleMargins: {
-            top: 0.7,
-            bottom: 0
-        }
-    }
-}
+};
 
 export const redAndGreenCandles = {
     upColor: "#26a69a",

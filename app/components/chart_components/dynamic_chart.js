@@ -121,7 +121,7 @@ export function Chart(props) {
 }
 
 export const ChartContainer = forwardRef((props, ref) => {
-    const { children, container, layout, ...rest } = props;
+    const { children, container, chartRef, layout, ...rest } = props;
 
     const chartApiRef = useRef({
         isRemoved: false,
@@ -175,6 +175,7 @@ export const ChartContainer = forwardRef((props, ref) => {
 
     useImperativeHandle(ref, () => chartApiRef.current.api(), []);
 
+    // Append layout effects when chart is created
     useEffect(() => {
         const currentRef = chartApiRef.current;
         currentRef.api().applyOptions({ layout });
@@ -226,6 +227,16 @@ export const Series = forwardRef((props, ref) => {
         const currentRef = context.current;
         const { children, data, ...rest } = props;
         currentRef.api().applyOptions(rest);
+
+        // Candlestick Margins
+        if (props.type === 'candlestick') {
+            currentRef.api().priceScale().applyOptions({
+                scaleMargins: {
+                    top: 0.2,
+                    bottom: 0.2
+                }
+            })
+        }
 
         // Create Margins if running volume overlay
         if (props.type === 'histogram' && props.priceScaleId === 'volume-overlay') {
