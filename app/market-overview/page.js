@@ -1,66 +1,56 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Container, CircularProgress } from '@mui/material';
+import { Box, Container, ListItem, ListItemText, Divider } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 
-import { getChartFormattedUnderlyingCandles } from '../utils/chart_formatted_queries';
-import { ChartComponent, darkModeChartOptions } from '../components/chart_components/basic_components';
-
-import { DynamicChart } from '../components/chart_components/dynamic_chart';
 import { UnderlyingDynamicChart } from '../components/chart_objects/underlying_dynamic';
+import { RTDataFeed } from '../components/rt_data_feed';
 
 import Navbar from '../components/navbar';
 
-// const SampleChart = (props) => {
-//     const [chartData, setChartData] = useState(null);
-//     const [isLoading, setIsLoading] = useState(true);
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
-//     useEffect(() => {
-//         const fetchChartData = async () => {
-//             try {
-//                 const data = await getChartFormattedUnderlyingCandles("SPX");
-//                 setChartData(data); 
-//             } catch (error) {
-//                 console.error("Failed to fetch chart data:", error);
-//             } finally {
-//                 setIsLoading(false); 
-//             }
-//         }
-
-//         fetchChartData();
-//     }, []);
-    
-//     if (isLoading) {
-//         return (
-//             <Container maxWidth="sm" style={{ textAlign: 'center', marginTop: '2rem', backgroundColor: '#222' }}>
-//                 <CircularProgress /> {/* Loading spinner */}
-//             </Container>
-//         );
-//     }
-
-//     if (!chartData) {
-//         return (
-//             <Container maxWidth="sm" style={{ textAlign: 'center', marginTop: '2rem' }}>
-//                 <p>Error loading chart data.</p> {/* Error message */}
-//             </Container>
-//         );
-//     }
-
-//     return (
-//         <Container maxWidth="md">
-//             <ChartComponent {...props} data={chartData} />
-//         </Container>
-//     );
-// }
-
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+        main: '#000000',
+    },
+    background: {
+        default: '#222'
+    },
+    success: {
+        main: 'rgb(34, 139, 34)',
+        contrastText: '#fff'
+    },
+    error: {
+        main: 'rgb(196, 30, 58)'
+    },
+    warning: {
+        main: 'rgb(228, 155, 15)',
+        contrastText: '#fff'
+    },
+    secondary: {
+        main: 'rgb(64, 130, 109)'
+    }
+  },
+});
 
 export default function MarketOverview(props) {
     return (
-        <>
+        <ThemeProvider theme={darkTheme}>
+            <CssBaseline />
             <Navbar />
-            <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                <UnderlyingDynamicChart {...props} />
-            </div>
-        </>
+            <Grid container spacing={2} sx={{ mt: 2, mx: 6 }}>
+                <Grid size={6}>
+                    <UnderlyingDynamicChart {...props}/>
+                </Grid>
+                <Grid size={6}>
+                    <RTDataFeed />
+                </Grid>
+            </Grid>
+        </ThemeProvider>
     );
 }

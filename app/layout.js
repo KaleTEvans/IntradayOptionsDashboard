@@ -20,11 +20,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <WebSocketProvider>{children}</WebSocketProvider>
-      </body>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <WebSocketProvider>{children}</WebSocketProvider>
+        </body>
     </html>
   );
 }

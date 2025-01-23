@@ -11,6 +11,8 @@ import React, {
     useState,
 } from 'react';
 
+import { Box } from '@mui/material';
+
 const Context = createContext();
 
 const initialData = [
@@ -114,14 +116,14 @@ export function Chart(props) {
     const [container, setContainer] = useState(false);
     const handleRef = useCallback(ref => setContainer(ref), []);
     return (
-        <div ref={handleRef}>
+        <Box ref={handleRef} sx={{ position: 'relative', width: 1, height: 1 }}>
             {container && <ChartContainer {...props} container={container} />}
-        </div>
+        </Box>
     );
 }
 
 export const ChartContainer = forwardRef((props, ref) => {
-    const { children, container, chartRef, layout, ...rest } = props;
+    const { children, container, layout, ...rest } = props;
 
     const chartApiRef = useRef({
         isRemoved: false,
@@ -130,8 +132,8 @@ export const ChartContainer = forwardRef((props, ref) => {
                 this._api = createChart(container, {
                     ...rest,
                     layout,
-                    width: container.clientWidth,
-                    height: 400,
+                    //width: container.clientWidth,
+                    //height: 400,
                 });
                 this._api.timeScale().fitContent();
             }
@@ -148,18 +150,20 @@ export const ChartContainer = forwardRef((props, ref) => {
         const currentRef = chartApiRef.current;
         const chart = currentRef.api();
 
-        const handleResize = () => {
-            chart.applyOptions({
-                ...rest,
-                width: container.clientWidth,
-            });
-        };
+        // Create ResizeObserver to watch the container
+        const resizeObserver = new ResizeObserver(() => {
+            if (container) {
+                chart.resize(container.clientWidth, container.clientHeight || 400); // Ensure both width and height are updated
+            }
+        });
 
-        window.addEventListener('resize', handleResize);
+        // Start observing the container
+        resizeObserver.observe(container);
+
         return () => {
-            window.removeEventListener('resize', handleResize);
+            resizeObserver.disconnect(); // Clean up ResizeObserver
             chartApiRef.current.isRemoved = true;
-            chart.remove();
+            chart.remove(); // Remove chart instance
         };
     }, []);
 
@@ -227,6 +231,11 @@ export const Series = forwardRef((props, ref) => {
         const currentRef = context.current;
         const { children, data, ...rest } = props;
         currentRef.api().applyOptions(rest);
+
+        // If stacking charts, this will ensure the time scales line up
+        currentRef.api().priceScale().applyOptions({
+            minimumWidth: 65
+        });
 
         // Candlestick Margins
         if (props.type === 'candlestick') {
